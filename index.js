@@ -23,8 +23,8 @@ client.on('message', message => {
     message.reply(prefix+"help - You're seeing this right now!");
     message.reply(prefix+"ping - ping pong!");
     // TODO : message.reply(prefix+"help-on-role - How to create \"Verified Accounts\" role.");
-    message.reply(prefix+"verifyuser <userid> - Add this user to role \"Verified Accounts\".");
-    message.reply(prefix+"remverified <userid> - Remove this user from role \"Verified Accounts\".");
+    message.reply(prefix+"verifyuser <userid> - Add this user to role \"Verified Accounts\" and checkmark user.");
+    message.reply(prefix+"remverified <userid> <username> - Remove this user from role \"Verified Accounts\" and uncheckmarked.");
   }
   if (cmd[0] == prefix+'verifyuser' && user.hasPermissions(8) == true) {
     message.delete();
@@ -48,6 +48,8 @@ client.on('message', message => {
           return;
         }
         user.addRole(r);
+        message.guild.members.get(cmd[1]).setNickname(message.guild.members.get(cmd[1]).displayName+" ✔");
+
         //399437752275304468 checkmark
 
         message.reply("User now verified! :white_check_mark:");
@@ -56,8 +58,8 @@ client.on('message', message => {
 }
     if (cmd[0] == prefix+'remverified' && user.hasPermissions(8) == true) {
       message.delete();
-      if(cmd[1] != null) {
-        var username = cmd[1].replace("@", "");
+      if(cmd[1] != null &&cmd[2]!=null) {
+        var username = cmd[2].replace("@", "");
         const user = message.guild.member(cmd[1])
         if(!user){
           message.reply("No username found!");
@@ -75,6 +77,7 @@ client.on('message', message => {
             message.reply("This username has not been Verified!");
             return;
           }
+          message.guild.members.get(cmd[1]).setNickname(cmd[2]);
           user.removeRole(r);
           //399437752275304468 checkmark
           message.reply("User unverified! *thumbs down*");
