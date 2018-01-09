@@ -1,11 +1,10 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const token = "" // Recommended to load from json file.
-const prefix = "."
+require("./conf.js");
 global.botuser = null
 client.on('ready', () => {
   console.log('I am ready!');
-  botuser = client.user;
+  botuser = client.user
   client.user.setGame('Verification at your service!');
 });
 
@@ -18,19 +17,22 @@ client.on('message', message => {
   }
   if(cmd[0] == prefix+'help' && user.hasPermissions(8) == true && message.member.id != client.user.id) {
     message.delete();
-    message.reply("Hi! I'm Verification, the public discord bot that acts like a social media verification thing.");
-    message.channel.sendMessage("Anyways, commands are:");
-    message.channel.sendMessage(prefix+"help - You're seeing this right now!");
-    message.channel.sendMessage(prefix+"ping - ping pong!");
-    // TODO : message.reply(prefix+"help-on-role - How to create \"Verified Accounts\" role.");
-    message.channel.sendMessage(prefix+"verifyuser <userid> - Add this user to role \"Verified Accounts\" and checkmark user.");
-    message.channel.sendMessage(prefix+"remverified <userid> - Remove this user from role \"Verified Accounts\" and uncheckmarked.");
+    const embed = new Discord.RichEmbed()
+  .setTitle("Verification: The public discord bot that acts like a social media verification thing.")
+  .setDescription("This bot acts like what it does on social medias: Gives you a check mark at the end of your username in a server. But this bot also does add verified users to \"Verified Accounts\" role (if it exists!).")
+  .addBlankField(true)
+  .addField(prefix+"ping","ping pong!")
+  .addField(prefix+"verifyuser", "Sets checkmark next to username then add user to predefined role \"Verified Accounts\".", true)
+  .addField(prefix+"remverified", "Removes checkmark next to username and user from predefined role \"Verified Accounts\".", true)
+  .addField(prefix+"help", "You're seeing this right now.", false);
+    message.author.send({embed});
+    message.reply("Check your DMs!");
   }
   if (cmd[0] == prefix+'verifyuser' && user.hasPermissions(8) == true && message.member.id != client.user.id) {
     message.delete();
     if(cmd[1] != null) {
-      var username = cmd[1].replace("@", "");
-      const user = message.guild.member(cmd[1])
+      var username = message.mentions.members.first();
+      const user = message.mentions.members.first();
       if(!user){
         message.reply("No username found!");
       } else if(user) {
@@ -48,7 +50,7 @@ client.on('message', message => {
           return;
         }
         user.addRole(r);
-        message.guild.members.get(cmd[1]).setNickname(message.guild.members.get(cmd[1]).displayName+" ✔");
+        user.setNickname(user.displayName+" ✔");
 
         //399437752275304468 checkmark
 
@@ -60,7 +62,7 @@ client.on('message', message => {
       message.delete();
       if(cmd[1] != null) {
         //var username = cmd[2].replace("@", "");
-        const user = message.guild.member(cmd[1])
+        const user = message.mentions.members.first();
         if(!user){
           message.reply("No username found!");
         } else if(user) {
@@ -77,7 +79,7 @@ client.on('message', message => {
             message.reply("This username has not been Verified!");
             return;
           }
-          message.guild.members.get(cmd[1]).setNickname("");
+          user.setNickname("");
           user.removeRole(r);
           //399437752275304468 checkmark
           message.reply("User unverified! *thumbs down*");
