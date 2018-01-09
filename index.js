@@ -12,21 +12,21 @@ client.on('ready', () => {
 client.on('message', message => {
   var cmd = message.content.split(' ');
   var user = message.member;
-  if (cmd[0] == prefix+'ping') {
+  if (cmd[0] == prefix+'ping' && message.member.id != client.user.id) {
     message.delete();
     message.reply('pong!');
   }
-  if(cmd[0] == prefix+'help' && user.hasPermissions(8) == true) {
+  if(cmd[0] == prefix+'help' && user.hasPermissions(8) == true && message.member.id != client.user.id) {
     message.delete();
     message.reply("Hi! I'm Verification, the public discord bot that acts like a social media verification thing.");
-    message.reply("Anyways, commands are:");
-    message.reply(prefix+"help - You're seeing this right now!");
-    message.reply(prefix+"ping - ping pong!");
+    message.channel.sendMessage("Anyways, commands are:");
+    message.channel.sendMessage(prefix+"help - You're seeing this right now!");
+    message.channel.sendMessage(prefix+"ping - ping pong!");
     // TODO : message.reply(prefix+"help-on-role - How to create \"Verified Accounts\" role.");
-    message.reply(prefix+"verifyuser <userid> - Add this user to role \"Verified Accounts\" and checkmark user.");
-    message.reply(prefix+"remverified <userid> - Remove this user from role \"Verified Accounts\" and uncheckmarked.");
+    message.channel.sendMessage(prefix+"verifyuser <userid> - Add this user to role \"Verified Accounts\" and checkmark user.");
+    message.channel.sendMessage(prefix+"remverified <userid> - Remove this user from role \"Verified Accounts\" and uncheckmarked.");
   }
-  if (cmd[0] == prefix+'verifyuser' && user.hasPermissions(8) == true) {
+  if (cmd[0] == prefix+'verifyuser' && user.hasPermissions(8) == true && message.member.id != client.user.id) {
     message.delete();
     if(cmd[1] != null) {
       var username = cmd[1].replace("@", "");
@@ -56,7 +56,7 @@ client.on('message', message => {
       }
     }
 }
-    if (cmd[0] == prefix+'remverified' && user.hasPermissions(8) == true) {
+    if (cmd[0] == prefix+'remverified' && user.hasPermissions(8) == true && message.member.id != client.user.id) {
       message.delete();
       if(cmd[1] != null) {
         //var username = cmd[2].replace("@", "");
